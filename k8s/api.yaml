@@ -18,7 +18,7 @@ spec:
         effect: "NoSchedule"           
       containers:
       - name: api
-        image: danferreira011/api-produto:{{tag}}
+        image: danferreira011/api-produto:v{{tag}}
         ports:
         - containerPort: 80
         imagePullPolicy: Always
