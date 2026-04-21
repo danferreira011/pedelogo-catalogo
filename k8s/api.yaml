@@ -10,7 +10,12 @@ spec:
     metadata:          
       labels:
         app: api
-    spec:            
+    spec:
+      tolerations: #Cluster AWS - Tolerations para permitir que os pods sejam agendados em nós com a taint "dedicated=apps:NoSchedule"
+      - key: "dedicated"
+        operator: "Equal"
+        value: "apps"
+        effect: "NoSchedule"           
       containers:
       - name: api
         image: danferreira011/api-produto:latest    #{{tag}}
