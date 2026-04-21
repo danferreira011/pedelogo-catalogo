@@ -24,9 +24,10 @@ pipeline{
                 tag_version = "${env.BUILD_ID}"
             }
             steps {
-                withKubeConfig([credentialsId: 'kubeconfig']) {
-                  sh 'sed -i "s/{{tag}}/$tag_version/g" ./k8s/api.yaml'
-                  sh 'aws eks update-kubeconfig --region us-east-1 --name eks-devops '
+                // withKubeConfig([credentialsId: 'kubeconfig']) {
+                withCredentials([[ $class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]){
+                  sh 'sed -i "s/{{tag}}/$tag_version/g" ./k8s/api.yaml' 
+                  sh 'aws eks update-kubeconfig --region us-east-1 --name eks-devops'                 
                   sh 'kubectl apply -f k8s/api.yaml'
                 }
             }
