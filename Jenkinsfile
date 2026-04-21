@@ -4,12 +4,19 @@ pipeline{
     stages{
         stage("Build Docker Image"){
             steps {
-                sh 'echo "Executando Docker Build"'
+                script{
+                    dockerapp = docker.build("danferreira011/api-produto:v${env.BUILD_ID}"), '-f ./src/PedeLogo.Catalogo.Api/Dockerfile ./src/PedeLogo.Catalogo.Api/ '
+                }
             }
         }
         stage("Push Docker Image"){
             steps {
-                sh 'echo "Executando Docker Push"'
+                script{
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub'){
+                    dockerapp.push('latest')
+                    dockerapp.push("v${env.BUILD_ID}")
+                    }
+                }
             }
         }
         stage("Deply no Kubernetes"){
